@@ -26,12 +26,12 @@ const App: FC = () => {
   return (
     <div className='bg-gray-900 h-screen' >
       <Router>
-        <Navigation />
+       { user && <Navigation /> }
         <Routes>
           <Route element={!user ? <SignUp /> : <Navigate to="/" />} path='/signup' />
           <Route element={!user ? <Login /> : <Navigate to="/" />} path='/login' />
           <Route element={user ? <Home /> : <Navigate to="/login" />} path='/' />
-          <Route element={<EditUser />} path='/edit-user' />
+          <Route element={user ? <EditUser />:<Navigate to="/login" />} path='/edit-user' />
           <Route element={<AdminLogin />} path='/admin' />
           <Route element={admin ? <AdminDashboard /> : <Navigate to="/admin"/>} path='/admin/dashboard' />
         </Routes>

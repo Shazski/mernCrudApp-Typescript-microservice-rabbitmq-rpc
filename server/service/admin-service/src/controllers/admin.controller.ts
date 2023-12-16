@@ -80,21 +80,22 @@ export const createUser = async (req: Request, res: Response) => {
       "createNewUser"
     );
     if (response.errorMessage) {
+      console.log(response)
       return res.status(409).json(response);
     }
     res.status(201).json(response);
   } catch (error) {
     res.status(409).json({ errorMessage: "username or email already taken" });
-    console.log(error);
+    console.log(error,"create user error");
   }
 };
 
 export const editUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
-  console.log(userId, "user id")
+  console.log(userId, "user id");
   try {
     let response: any = await rabbitMqClient.produceAndWaitForReplay(
-      {userId, data:req.body},
+      { userId, data: req.body },
       configRabbitmq.rabbitMq.queue.user_queue,
       "editExistingUser"
     );
@@ -106,3 +107,28 @@ export const editUser = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+
+export const getUserDetailsWithId = async (req: Request, res: Response) => {
+  try {
+    const userID = req.params.id;
+    let response: any = await rabbitMqClient.produceAndWaitForReplay(
+      userID,
+      configRabbitmq.rabbitMq.queue.user_queue,
+      "getUserDetailsWithId"
+    );
+    if (response.errorMessage) {
+      return res.status(409).json(response);
+    }
+    res.status(201).json(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const adminLogout = (req: Request, res: Response) => {
+  console.log("delete cookie")
+  res
+    .clearCookie("admin_token")
+    .status(200)
+    .json({ message: "Logged Out Successfully!" });
+}

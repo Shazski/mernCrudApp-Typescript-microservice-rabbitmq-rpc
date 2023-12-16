@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { adminLogin, getLoggedInAdmin } from "../../actions/admin/adminAction"
+import { adminLogin, adminLogout, getLoggedInAdmin } from "../../actions/admin/adminAction"
 
 export const adminSlice = createSlice({
     name: "admin",
@@ -32,6 +32,18 @@ export const adminSlice = createSlice({
                 state.admin = payload as {email:string}
             })
             .addCase(getLoggedInAdmin.rejected, (state, {payload}) => {
+                state.loading = false,
+                state.admin = null
+            })
+            .addCase(adminLogout.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(adminLogout.fulfilled, (state) => {
+                state.loading = false
+                state.error = null
+                state.admin = null
+            })
+            .addCase(adminLogout.rejected, (state, {payload}) => {
                 state.loading = false,
                 state.admin = null,
                 state.error = payload as string

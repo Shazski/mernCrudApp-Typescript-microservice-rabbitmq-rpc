@@ -29,6 +29,11 @@ export default class messgaeHandler {
             { new: true }
           );
           break;
+        case "getUserDetailsWithId":
+          const idData = data;
+          const userIdData = new mongoose.Types.ObjectId(idData);
+          response = await User.findById(userIdData);
+          break;
         default:
           response = "request key is not found";
           break;
@@ -42,7 +47,7 @@ export default class messgaeHandler {
           replyTo
         );
       } else {
-        console.log(error);
+        console.log(error,"simpleerror");
       }
     }
   }
