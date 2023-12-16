@@ -13,7 +13,7 @@ const AdminDashboard: FC = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { admin } = useSelector((state: RootState) => state.admin)
     const [error, setError] = useState<string>("")
-    const [error2, setError2] = useState<string>("")
+    const [editError, setEditError] = useState<string>("")
     const [formData, setFormData] = useState<IformTypes>({
         username: "",
         password: "",
@@ -95,7 +95,7 @@ const AdminDashboard: FC = () => {
             setError(error.response.data.errorMessage)
         }
     }
-    const handleSubmit2 = async (e: FormEvent<HTMLFormElement>) => {
+    const editHandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response: any = await axios.post(`http://localhost:3001/api/admin/edit-user/${editId}`, editUserformData)
@@ -106,13 +106,13 @@ const AdminDashboard: FC = () => {
             else {
                 toast.success("User Edited successfully")
                 setFormData({ username: "", email: "", password: "" })
-                setError2("")
+                setEditError("")
                 ShowModalEdit(false)
                 fetchAllUser()
             }
         } catch (error: any) {
             console.log(error, "error in catch")
-            setError2(error.response.data.errorMessage)
+            setEditError(error.response.data.errorMessage)
         }
     }
 
@@ -276,8 +276,8 @@ const AdminDashboard: FC = () => {
                 <Modal isVisible={showModalEdit} onCLose={() => ShowModalEdit(false)}>
                     <div className='text-black'>
                         <h2 className='font-bold text-md text-center'>Edit User</h2>
-                        {error && <p className='text-red-700 text-center'>{error2}</p>}
-                        <form action="" onSubmit={handleSubmit2}>
+                        {editError && <p className='text-red-700 text-center'>{editError}</p>}
+                        <form action="" onSubmit={editHandleSubmit}>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-black">
                                     Email address
